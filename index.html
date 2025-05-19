@@ -12,23 +12,29 @@
 
 <body class="bg-gray-200 text-gray-800">
   <!-- Nav Header -->
-  <nav class="bg-white w-full h-30 shadow  mt-5">
-    <div class="container mx-auto px-4 py-6 text-center mb-5">
-      <img class="w-20 mx-auto rounded-lg" src="/img/logois.jpeg" alt=" " />
-      <h1 class="text-4xl font-bold text-purple-950 mb-5">
-        Pull Request Blog
-      </h1>
+   <header>
+    <nav class="bg-white w-full h-30 shadow  mt-5 py-4 px-4 rounded-md mx-5 space-y-3">
+      <div class="flex items-center gap-4">
+        <img class="w-14 rounded-lg" src="/img/logois.jpeg" alt=" " />
+        <span class="text-2xl font-bold text-purple-950 mb-5">Pull Request Blog</span>
+      </div>
+  
+        <!-- Nav Items -->
+        <div class="hidden md:block">
+          <a href="#" class="text-gray-600 hover:text-red-600">Home</a>
+          <a href="#" class="text-gray-600 hover:text-red-600">Entertainment</a>
+          <a href="#" class="text-gray-600 hover:text-red-600">Tech Update</a>
+          <a href="#" class="text-gray-600 hover:text-red-600">Lifestyle</a>
+          <a href="#" class="text-gray-600 hover:text-red-600">Contact</a>
+        </div>
 
-      <!-- Nav Items -->
-      <nav class="space-x-4">
-        <a href="#" class="text-gray-600 hover:text-red-600">Home</a>
-        <a href="#" class="text-gray-600 hover:text-red-600">Entertainment</a>
-        <a href="#" class="text-gray-600 hover:text-red-600">Tech Update</a>
-        <a href="#" class="text-gray-600 hover:text-red-600">Lifestyle</a>
-        <a href="#" class="text-gray-600 hover:text-red-600">Contact</a>
-      </nav>
-    </div>
-  </nav>
+        <div>
+          <a href="register.html" class="bg-purple-500 text-white rounded-md py-1 px-2 hover:bg-purple-700"><button>Register</button></a>
+          <a href="login.html" class="bg-purple-500 text-white rounded-md py-1 px-2 hover:bg-purple-700"><button>Login</button></a>
+        </div>
+    </nav>
+   </header>
+
 
   <!-- The Main Container -->
   <main class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
@@ -242,6 +248,10 @@
       <span class="hover:text-white cursor-pointer">Terms of Service</span>
     </div>
   </footer>
+
+  <script>
+    
+  </script>
 </body>
 
 </html>

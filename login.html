@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Login Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-200">
+    <form class="w-96 h-80 bg-white mx-auto rounded-3xl shadow-xl mt-44" id="loginForm">
+        <div class="flex justify-center mt-10">
+            <h1 class="text-2xl mt-7 font-extrabold font-serif text-black">Login Here</h1>
+        </div>
+
+        <div class="text-center mt-5">
+        <div>
+            <div class="mt-5">
+            <label></label>
+            <input type="email" placeholder="email" class=" px-4 py-2 bg-gray-200  rounded-xl" id="email" required>
+        </div>
+        <div class="mt-5">
+            <label></label>
+            <input type="password" placeholder="***************" class=" px-4 py-2 bg-gray-200 rounded-xl" id="password" required>
+        </div>
+
+         <div class="w-44 h-10 bg-slate-700 hover:bg-slate-500 mx-auto mt-5 rounded-xl">
+             <a href="index.html"><button id="submit" class="mt-2 text-white font-bold">Login</button></a>
+        </div>
+
+          <div class="mt-4">
+            Don't have an account? <a href="register.html" class="underline text-blue-700">Register</a>
+        </div>
+        </div>
+    </form>
+    <footer>
+        <div class="flex justify-center mt-24">
+            <p class="text-sm">©2025 pull request, Inc. All rights reserved. · Terms of use · Privacy policy</p>
+        </div>
+    </footer>
+    
+    <script>
+        // REGISTER USER
+        document.getElementById("loginForm").addEventListener("submit", function (e) {
+          e.preventDefault();
+    
+        //   let name = document.getElementById("name").value;
+        //   let email = document.getElementById("email").value;
+        //   let password = document.getElementById("password").value;
+        //   let team_name = document.getElementById("team").value.trim();
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value; //fetch("https://test.blockfuselabs.com/api/login")
+        
+    
+          fetch("https://test.blockfuselabs.com/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "accept": "application/json",
+            },
+            body: JSON.stringify({email, password}),
+          })
+            .then(async (response) => {
+              const data = await response.json();
+              if (response.ok) {
+                alert("User logged in successfully");
+                console.log("Login successful:", data);
+              } else {
+           alert(data.message || "Login failed.");
+                console.error("Login error:", data);
+              }
+            })
+            .catch((error) => {
+              console.error("Network error during Login:", error);
+              alert("Network error.");
+            });
+            
+        });
+    
+
+      </script>
+</body>
+</html>

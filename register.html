@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Register</title>
+</head>
+<body class="bg-gray-200">
+    <div class="w-20 mx-auto rounded-lg mt-10">
+        <img class="rounded-2xl" src="/img/logois.jpeg" alt="">
+    </div>
+    <form id="form" class="w-[390px] h-[590px] bg-white mx-auto rounded-3xl shadow-xl">
+    <div class="flex justify-center mt-10">
+        <h1 class="text-2xl mt-7 font-extrabold font-serif text-black">Sign Up To Pull Request</h1>
+    </div>
+    <div class="text-center mt-5">
+        <div>
+            <label for="name"></label>
+            <input type="text" placeholder="full name" class=" px-4 py-2 bg-gray-200 rounded-xl"  id="name" required>
+        </div>
+
+        <div class="mt-5">
+            <label for="email"></label>
+            <input type="email" placeholder="email" class=" px-4 py-2 bg-gray-200  rounded-xl" id="email" required>
+        </div>
+        <div class="mt-5">
+            <label for="password"></label>
+            <input type="password" placeholder="************" class=" px-4 py-2 bg-gray-200 rounded-xl" id="password" required>
+        </div>
+        <div class="mt-5">
+            <label for="team"></label>
+            <input type="text" placeholder="team name" class=" px-4 py-2 bg-gray-200 rounded-xl" id="team" required>
+        </div>
+
+        <div class="terms">
+            <label for="checkbox">Agreed to Sign in <a href="#" class="underline text-blue-700">Terms and<br> Condition</a></label>
+        </div>
+
+        <div class="w-44 h-10 bg-slate-700 hover:bg-slate-500 mx-auto mt-5 rounded-xl">
+             <button id="submit" class="mt-2 text-white font-bold">Sign Up</button>
+        </div>
+
+        <div class="mt-2">
+            <p>or</p>
+        </div>
+
+        <div action="/your-auth-endpoint" class="flex mx-auto border border-black rounded-xl items-center w-52 h-14 mt-3  py-2 cursor-pointer hover:bg-gray-200">
+            <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_18dp.png" alt="Google logo" class="w-5 h-5 m-3">
+            <a href=""><input type="submit" value="Sign In with Google" class="text-gray-700 text-sm cursor-pointer" /></a>
+        </div>
+
+        <div class="mt-4">
+            Already a member? <a href="login.html" class="underline text-blue-700">Login Here</a>
+        </div>
+        </div>
+    </form>
+
+    <footer>
+        <div class="flex justify-center mt-14">
+            <p class="text-sm">©2025 Postman, Inc. All rights reserved. · Terms of use · Privacy policy</p>
+        </div>
+    </footer>
+
+    <script>
+
+let subBtn = document.getElementById("subBtn");
+
+document.getElementById("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    
+
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let password = document.getElementById("password").value;
+    let team = document.getElementById("team").value;
+
+    localStorage.setItem(name.value, email.value, password.value, team.value);
+
+
+    fetch("https://test.blockfuselabs.com/api/register", {
+        method: "POST",
+        headers: {
+            "accept":  "*/*",
+            "Content-Type": "application/json",
+            
+        },
+        body: JSON.stringify({ name, email, password, team }),
+    })
+        .then(async (response) => {
+            const data = await response.json();
+            if (response.ok) {
+                alert("User registered successfully!");
+                console.log("Registration successful:", data);
+            } else {
+                alert(data.message || "Registration failed.");
+                console.error("Registration error:", data);
+            }
+        })
+        .catch((error) => {
+            console.error("Network error during registration:", error);
+            alert("Network error.");
+        });
+
+})
+
+//Registration successful: {user: {…}, token: '125|vx4bkmIvOeA3l0LC3GjEXvSFQq7RRjWZMNbMOwFG89186882'}token: "125|vx4bkmIvOeA3l0LC3GjEXvSFQq7RRjWZMNbMOwFG89186882"user: created_at: "2025-05-18T21:01:50.000000Z"email: "roycerice000@gmail.com"id: 84name: "MP"updated_at: "2025-05-18T21:01:50.000000Z"[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()[[Prototype]]: Objectconstructor: ƒ Object()hasOwnProperty: ƒ hasOwnProperty()isPrototypeOf: ƒ isPrototypeOf()propertyIsEnumerable: ƒ propertyIsEnumerable()toLocaleString: ƒ toLocaleString()toString: ƒ toString()valueOf: ƒ valueOf()__defineGetter__: ƒ __defineGetter__()__defineSetter__: ƒ __defineSetter__()__lookupGetter__: ƒ __lookupGetter__()__lookupSetter__: ƒ __lookupSetter__()__proto__: (...)get __proto__: ƒ __proto__()set __proto__: ƒ __proto__()
+
+//token: "126|9VlYrgVro2jdA7P4ZWDz2pxBjxjC9LxI2SzGAKAtf5e7cc63"user: created_at: "2025-05-18T21:07:31.000000Z"email: "badrobotmp@gmail.com"id: 85name: "Msughter Apera"updated_at: "2025-05-18T21:07:31.000000Z"[[Prototype]]: Object[[Prototype]]: Object
+//Registration successful: {user: {…}, token: '223|phr3z06Z0DFuG9mLY5ow28bwLOJTs6oCd9eXcLeqfe771140'}token: "223|phr3z06Z0DFuG9mLY5ow28bwLOJTs6oCd9eXcLeqfe771140"user: created_at: "2025-05-19T18:33:51.000000Z"email: "wall@gmail.com"id: 125name: "Patrick Wallex"updated_at: "2025-05-19T18:33:51.000000Z"[[Prototype]]: Object[[Prototype]]: Object wallex
+
+    </script>
+</body>
+
+</html>
