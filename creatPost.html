@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Blog Post</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-100 text-gray-900">
+    <div class="max-w-2xl mx-auto mt-10 bg-white p-6 rounded shadow">
+      <h1 class="text-2xl font-bold mb-4">Create a New Blog Post</h1>
+
+      <form id="postForm" class="space-y-4">
+        <div>
+          <label for="title" class="block font-semibold">Title</label>
+          <input
+            type="text"
+            id="title"
+            class="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label for="content" class="block font-semibold">Content</label>
+          <textarea
+            id="content"
+            class="w-full p-2 border rounded"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+
+        <div>
+          <label for="category_id" class="block font-semibold"
+            >Select Category</label
+          >
+          <select id="category_id" class="w-full p-2 border rounded" required>
+            <option value="">Loading categories...</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Submit Post
+        </button>
+      </form>
+
+      <div id="responseMessage" class="mt-4 text-sm"></div>
+    </div>
+
+    <div class="max-w-2xl mx-auto mt-6 p-6 bg-white rounded shadow">
+      <h2 class="text-xl font-bold mb-4">Submitted Posts</h2>
+      <div id="submittedPosts" class="space-y-4"></div>
+    </div>
+
+    <script>
+      const categorySelect = document.getElementById('category_id');
+      const submittedPostsContainer = document.getElementById('submittedPosts');
+
+      async function loadCategories() {
+        try {
+          const res = await fetch(
+            'https://test.blockfuselabs.com/api/categories',
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          const data = await res.json();
+
+          categorySelect.innerHTML =
+            '<option value="">Select a category</option>';
+          data.data.forEach((cat) => {
+            const option = document.createElement('option');
+            option.value = cat.id;
+            option.textContent = cat.name;
+            categorySelect.appendChild(option);
+          });
+        } catch (error) {
+          console.error('Failed to load categories:', error);
+          categorySelect.innerHTML =
+            '<option value="">Failed to load categories</option>';
+        }
+      }
+
+      function displayPost({ title, content, categoryName }) {
+        const postEl = document.createElement('div');
+        postEl.className = 'border p-4 rounded bg-gray-50';
+        postEl.innerHTML = `
+        <h3 class="font-bold text-lg text-blue-700">${title}</h3>
+        <p class="text-sm text-gray-700 mt-2">${content}</p>
+        <p class="text-xs text-gray-500 mt-2">Category: ${categoryName}</p>
+      `;
+        submittedPostsContainer.prepend(postEl);
+      }
+
+      document
+        .getElementById('postForm')
+        .addEventListener('submit', async (e) => {
+          e.preventDefault();
+
+          const title = document.getElementById('title').value.trim();
+          const content = document.getElementById('content').value.trim();
+          const category_id = categorySelect.value;
+          const categoryName =
+            categorySelect.options[categorySelect.selectedIndex].text;
+
+          if (!category_id) {
+            document.getElementById('responseMessage').textContent =
+              'Please select a category.';
+            return;
+          }
+
+          try {
+            const res = await fetch(
+              'https://test.blockfuselabs.com/api/posts',
+              {
+                method: 'POST',
+                headers: {
+                  Accept: '*/*',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  title,
+                  content,
+                  category_id: parseInt(category_id),
+                }),
+              }
+            );
+
+            const result = await res.json();
+
+            if (res.ok) {
+              document.getElementById(
+                'responseMessage'
+              ).innerHTML = `<p class="text-green-600 font-semibold">Post created successfully!</p>`;
+              displayPost({ title, content, categoryName });
+              e.target.reset();
+            } else {
+              document.getElementById(
+                'responseMessage'
+              ).innerHTML = `<p class="text-red-600 font-semibold">Error: ${
+                result.message || 'Failed to create post.'
+              }</p>`;
+            }
+          } catch (error) {
+            console.error('Post submission error:', error);
+            document.getElementById(
+              'responseMessage'
+            ).innerHTML = `<p class="text-red-600 font-semibold">An error occurred while submitting the post.</p>`;
+          }
+        });
+
+      // Initial load
+      window.addEventListener('DOMContentLoaded', loadCategories);
+    </script>
+  </body>
+</html>

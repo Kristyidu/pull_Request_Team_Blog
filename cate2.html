@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Categories</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gray-400 text-gray-900">
+    <div class="max-w-6xl mx-auto p-6">
+     <div class="flex justify-between items-center">
+       <span class="text-2xl md:text-4xl my-10 text-center font-bold">All Categories</span>
+      <a href="cateid.html" class="hidden md:block my-10 bg-purple-500 px-1 py-1 rounded-md text-white hover:bg-purple-700 font-bold"><span>Get categories by ID</span></a>
+     </div>
+
+      <div
+        id="categoryGrid"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6"
+      >
+        <!-- Load all categories -->
+      </div>
+
+      <div class="mb-4">
+        <a href="cateid.html"class="bg-purple-500 px-1 py-1 rounded-sm text-white hover:bg-purple-700 text-center font-bold md:hidden"><span>Get categories by ID</span></a>
+      </div>
+
+      <div id="pageControls" class="flex gap-2 flex-wrap justify-center"></div>
+    </div>
+
+    <script>
+      async function fetchCategories(page = 1) {
+        try {
+          const response = await fetch(
+            `https://test.blockfuselabs.com/api/categories?page=${page}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          const result = await response.json();
+
+          const categories = result.data;
+          const container = document.getElementById('categoryGrid');
+          container.innerHTML = '';
+
+          categories.forEach((cat) => {
+            const card = document.createElement('div');
+            card.className =
+              'bg-white p-5 rounded-lg shadow hover:bg-blue-50 cursor-pointer transition';
+            card.innerHTML = `
+              <h2 class="text-2xl font-bold text-blue-700">${cat.name}</h2>
+              <p class="text-lg text-gray-500 mt-1">Slug: ${cat.slug}</p>
+              <p class="text-sm text-gray-400 mt-2">Created: ${new Date(
+                cat.created_at
+              ).toLocaleDateString()}</p>
+            `;
+            card.addEventListener('click', () => {
+              console.log('Selected Category:', cat);
+              alert(`Selected Category:\n${cat.name}`);
+            });
+            container.appendChild(card);
+          });
+
+          const pagination = document.getElementById('pageControls');
+          pagination.innerHTML = '';
+
+          result.links.forEach((link) => {
+            const pageBtn = document.createElement('button');
+            pageBtn.innerHTML = link.label
+              .replace('&laquo;', '«')
+              .replace('&raquo;', '»');
+            pageBtn.disabled = !link.url;
+            pageBtn.className = `px-3 py-1 border rounded ${
+              link.active ? 'bg-blue-600 text-white' : 'hover:bg-blue-100'
+            }`;
+            pageBtn.addEventListener('click', () => {
+              if (link.url) {
+                const url = new URL(link.url);
+                const nextPage = url.searchParams.get('page');
+                fetchCategories(nextPage);
+              }
+            });
+            pagination.appendChild(pageBtn);
+          });
+        } catch (error) {
+          console.error('Error fetching categories:', error);
+          document.getElementById('categoryGrid').innerHTML =
+            '<p class="text-pink-600">Unable to load categories.</p>';
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', () => fetchCategories());
+    </script>
+  </body>
+</html>

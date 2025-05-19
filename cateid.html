@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PR Blog</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-gradient-to-br from-purple-200 to-gray-300 text-gray-900">
+    <div class="max-w-6xl mx-auto p-6">
+      <h1 class="text-2xl md:text-4xl my-10 text-center font-bold">
+        Categories By ID
+      </h1>
+
+      <!-- Category ID Input + Buttons -->
+      <div class="flex items-center gap-4 mb-6 justify-center flex-wrap">
+        <input
+          type="number"
+          id="categoryIdInput"
+          placeholder="Enter Category ID"
+          class="p-2 rounded border w-48"
+        />
+        <button
+          onclick="fetchCategoryById()"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Get Category by ID
+        </button>
+        <button
+          onclick="fetchCategories()"
+          class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
+        >
+          Reset Categories
+        </button>
+        <button
+          onclick="toggleCategories()"
+          id="toggleBtn"
+          class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          Hide Categories
+        </button>
+
+        <button id="toggleBtn"class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-700"><a href="index.html">Go to Home</a></button>
+      </div>
+
+      <!-- Category Grid -->
+      <div
+        id="categoryGrid"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6"
+      >
+        <!-- Categories load here -->
+      </div>
+
+      <div id="pageControls" class="flex gap-2 flex-wrap justify-center"></div>
+    </div>
+
+    <script>
+      let categoriesVisible = true;
+
+      async function fetchCategories(page = 1) {
+        try {
+          const response = await fetch(
+            `https://test.blockfuselabs.com/api/categories?page=${page}`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+
+          const result = await response.json();
+          const categories = result.data;
+          const container = document.getElementById('categoryGrid');
+          container.innerHTML = '';
+
+          categories.forEach((cat) => {
+            const card = document.createElement('div');
+            card.className =
+              'bg-white p-5 rounded-lg shadow hover:bg-blue-50 cursor-pointer transition';
+            card.innerHTML = `
+              <h2 class="text-2xl font-bold text-blue-700">${cat.name}</h2>
+              <p class="text-lg text-gray-500 mt-1">Slug: ${cat.slug}</p>
+              <p class="text-sm text-gray-400 mt-2">Created: ${new Date(
+                cat.created_at
+              ).toLocaleDateString()}</p>
+            `;
+            card.addEventListener('click', () => {
+              alert(`Selected Category:\n${cat.name}`);
+            });
+            container.appendChild(card);
+          });
+
+          const pagination = document.getElementById('pageControls');
+          pagination.innerHTML = '';
+
+          result.links.forEach((link) => {
+            const pageBtn = document.createElement('button');
+            pageBtn.innerHTML = link.label
+              .replace('&laquo;', '«')
+              .replace('&raquo;', '»');
+            pageBtn.disabled = !link.url;
+            pageBtn.className = `px-3 py-1 border rounded ${
+              link.active ? 'bg-blue-600 text-white' : 'hover:bg-blue-100'
+            }`;
+            pageBtn.addEventListener('click', () => {
+              if (link.url) {
+                const url = new URL(link.url);
+                const nextPage = url.searchParams.get('page');
+                fetchCategories(nextPage);
+              }
+            });
+            pagination.appendChild(pageBtn);
+          });
+        } catch (error) {
+          console.error('Error fetching categories:', error);
+          document.getElementById('categoryGrid').innerHTML =
+            '<p class="text-pink-600">Unable to load categories.</p>';
+        }
+      }
+
+      async function fetchCategoryById() {
+        const id = document.getElementById('categoryIdInput').value;
+        if (!id) return alert('Please enter a valid category ID.');
+
+        try {
+          const response = await fetch(
+            `https://test.blockfuselabs.com/api/categories/${id}`,
+            {
+              method: 'GET',
+              headers: {
+                Accept: '*/*',
+              },
+            }
+          );
+
+          if (!response.ok) throw new Error('Category not found');
+
+          const cat = await response.json();
+
+          const container = document.getElementById('categoryGrid');
+          const pagination = document.getElementById('pageControls');
+          container.innerHTML = '';
+          pagination.innerHTML = '';
+
+          const card = document.createElement('div');
+          card.className =
+            'bg-white p-5 rounded-lg shadow hover:bg-blue-50 cursor-pointer transition';
+          card.innerHTML = `
+            <h2 class="text-2xl font-bold text-blue-700">${cat.name}</h2>
+            <p class="text-lg text-gray-500 mt-1">Slug: ${cat.slug}</p>
+            <p class="text-sm text-gray-400 mt-2">Created: ${new Date(
+              cat.created_at
+            ).toLocaleDateString()}</p>
+          `;
+          container.appendChild(card);
+        } catch (error) {
+          console.error('Error fetching category by ID:', error);
+          document.getElementById('categoryGrid').innerHTML =
+            '<p class="text-red-600">Category not found or error occurred.</p>';
+        }
+      }
+
+      function toggleCategories() {
+        const grid = document.getElementById('categoryGrid');
+        const controls = document.getElementById('pageControls');
+        const btn = document.getElementById('toggleBtn');
+
+        categoriesVisible = !categoriesVisible;
+
+        if (categoriesVisible) {
+          grid.style.display = 'grid';
+          controls.style.display = 'flex';
+          btn.textContent = 'Hide Categories';
+          fetchCategories();
+        } else {
+          grid.style.display = 'none';
+          controls.style.display = 'none';
+          btn.textContent = 'Show Categories';
+        }
+      }
+
+      window.addEventListener('DOMContentLoaded', () => fetchCategories());
+    </script>
+  </body>
+</html>
