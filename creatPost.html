@@ -70,7 +70,7 @@
             {
               method: 'GET',
               headers: {
-                'Content-Type': 'application/json',
+                Accept: '*/*','Content-Type': 'application/json', Authorization :'Bearer' + '126|9VlYrgVro2jdA7P4ZWDz2pxBjxjC9LxI2SzGAKAtf5e7cc63'
               },
             }
           );
@@ -124,14 +124,11 @@
               'https://test.blockfuselabs.com/api/posts',
               {
                 method: 'POST',
-                headers: {
-                  Accept: '*/*',
-                  'Content-Type': 'application/json',
-                },
+                headers: {Accept: '*/*','Content-Type': 'application/json', Authorization: 'Bearer '+ '126|9VlYrgVro2jdA7P4ZWDz2pxBjxjC9LxI2SzGAKAtf5e7cc63'},
                 body: JSON.stringify({
                   title,
                   content,
-                  category_id: parseInt(category_id),
+                  category_id: parseInt(category_id, 10),
                 }),
               }
             );
