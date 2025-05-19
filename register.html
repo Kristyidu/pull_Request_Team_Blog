@@ -94,6 +94,7 @@ document.getElementById("form").addEventListener("submit", function (e) {
             if (response.ok) {
                 alert("User registered successfully!");
                 console.log("Registration successful:", data);
+                window.location.href="login.html";
             } else {
                 alert(data.message || "Registration failed.");
                 console.error("Registration error:", data);
