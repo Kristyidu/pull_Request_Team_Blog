@@ -75,9 +75,16 @@ document.getElementById("form").addEventListener("submit", function (e) {
     let name = document.getElementById("name").value;
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
-    let team = document.getElementById("team").value;
+    let team_name = document.getElementById("team").value;
 
-    localStorage.setItem(name.value, email.value, password.value, team.value);
+    let user = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        team_name: document.getElementById("team").value,
+    }
+
+    let json = JSON.stringify(user);
 
 
     fetch("https://test.blockfuselabs.com/api/register", {
@@ -87,13 +94,16 @@ document.getElementById("form").addEventListener("submit", function (e) {
             "Content-Type": "application/json",
             
         },
-        body: JSON.stringify({ name, email, password, team }),
+        body: JSON.stringify(user),
     })
         .then(async (response) => {
             const data = await response.json();
             if (response.ok) {
                 alert("User registered successfully!");
                 console.log("Registration successful:", data);
+                localStorage.setItem("userDetails", "true");
+                localStorage.setItem("user", JSON.stringify(data));
+                localStorage.setItem("userToken", data.token);
                 window.location.href="login.html";
             } else {
                 alert(data.message || "Registration failed.");

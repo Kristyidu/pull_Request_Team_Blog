@@ -74,8 +74,14 @@
         //   let password = document.getElementById("password").value;
         //   let team_name = document.getElementById("team").value.trim();
         let email = document.getElementById("email").value;
-        let password = document.getElementById("password").value; //fetch("https://test.blockfuselabs.com/api/login")
-        
+        let password = document.getElementById("password").value;
+
+        let user = {
+          email: email,
+          password: password
+        }
+      
+        let json= JSON.stringify(user);
     
           fetch("https://test.blockfuselabs.com/api/login", {
             method: "POST",
@@ -83,14 +89,18 @@
               "Content-Type": "application/json",
               "accept": "application/json",
             },
-            body: JSON.stringify({email, password}),
+            body: JSON.stringify(user),
           })
             .then(async (response) => {
               const data = await response.json();
               if (response.ok) {
                 alert("User logged in successfully");
                 console.log("Login successful:", data);
-                window.location.href="index.html";
+                localStorage.setItem("userIsLoggedIn", "true");
+                localStorage.setItem("user", json);
+                localStorage.setItem("userToken", data.token);
+                window.location.href="creatPost.html";
+                
               } else {
            alert(data.message || "Login failed.");
                 console.error("Login error:", data);
