@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Update Post via API</title>
+</head>
+<body>
+  <h1>Update a Post</h1>
+
+  <input type="text" id="postId" placeholder="Enter Post ID" required>
+  <input type="text" id="title" placeholder="Enter Post Title" required>
+  <textarea id="content" placeholder="Enter Post Content" required></textarea>
+  <button onclick="updatePost()">Update Post</button>
+
+  <div id="response"></div>
+
+  <script>
+    async function updatePost() {
+      const postId = document.getElementById('postId').value.trim();
+      const title = document.getElementById('title').value.trim();
+      const content = document.getElementById('content').value.trim();
+      const responseDiv = document.getElementById('response');
+
+      if (!postId || !title || !content) {
+        responseDiv.innerText = 'Please fill in all fields.';
+        return;
+      }
+
+      try {
+        const response = await fetch(`https://test.blockfuselabs.com/api/posts/${postId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer 493|KndY3tI5y4nEs723qqGMn0Swtd7vBXLE1VKnIrfO5d49f82a'
+          },
+          body: JSON.stringify({ title, content })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          responseDiv.innerText = 'Success: Post updated!\n\n' + JSON.stringify(data, null, 2);
+        } else {
+          const errorData = await response.json().catch(() => ({}));
+          const errorMessage = errorData.message || errorData.error || response.statusText || 'Unknown error';
+          responseDiv.innerText = `Error: HTTP ${response.status} - ${errorMessage}\n\nFull Error Data: ${JSON.stringify(errorData, null, 2)}`;
+          console.error('API Error:', { status: response.status, errorData });
+        }
+      } catch (error) {
+        responseDiv.innerText = 'Request failed: ' + error.message;
+        console.error('Request Error:', error);
+      }
+    }
+  </script>
+</body>
+</html>
