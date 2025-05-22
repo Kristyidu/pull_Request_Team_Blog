@@ -13,13 +13,13 @@
   <header>
     <nav class="bg-white  h-30 shadow  mt-5 py-4 px-4 rounded-md mx-5 space-y-3 md:flex justify-between">
       <div class="flex items-center gap-4">
-        <img class="w-14 rounded-lg" src="/img/logois.jpeg" alt=" " />
+        <a href="index.html"><img class="w-14 rounded-lg" src="/img/logois.jpeg" alt=" " /></a>
         <span class="text-2xl font-bold text-purple-950 mb-5 md:text-4xl">Pull Request Blog</span>
       </div>
 
       <!-- Nav Items -->
       <div class="hidden md:block space-x-4">
-        <a href="#" class="text-gray-600 hover:text-red-600">Home</a>
+        <a href="index.html" class="text-gray-600 hover:text-red-600">Home</a>
         <a href="#" class="text-gray-600 hover:text-red-600">Entertainment</a>
         <a href="#" class="text-gray-600 hover:text-red-600">Tech Update</a>
         <a href="creatPost.html" class="text-gray-600 hover:text-red-600">Create a Post</a>
@@ -87,9 +87,7 @@
           'https://test.blockfuselabs.com/api/categories',
           {
             method: 'GET',
-            headers: {
-              Accept: '*/*', 'Content-Type': 'application/json', Authorization: 'Bearer' + token
-            },
+            headers: {Accept: '*/*', 'Content-Type': 'application/json', Authorization: 'Bearer' + token},
           }
         );
         const data = await res.json();
@@ -142,11 +140,10 @@
       // }
 
       try {
-        const res = await fetch(
-          'https://test.blockfuselabs.com/api/posts',
+        const res = await fetch('https://test.blockfuselabs.com/api/posts',
           {
             method: 'POST',
-            headers: { Accept: '*/*', 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+            headers: { Accept: '*/*', 'Content-Type': 'application/json', Authorization: 'Bearer ' + token},
             body: JSON.stringify({
               title,
               content,

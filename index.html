@@ -40,8 +40,8 @@
   <!-- The Main Container -->
   <main class="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
     <!-- Section  for the Blog Post -->
-    <section class="grid grid-cols-2 gap-4" id="main">
-      <!-- Post 1 -->
+    <section class="grid grid-cols-2 gap-4" id="mainContentContainer">
+      <!-- Post 1
       <article class="bg-white rounded shadow p-6 flex flex-col ">
         <a href="#" class="lg:text-2xl text-sm font-semibold mb-4 hover:underline">Starknet and Cairo boothcamps kicks
           off at Blockfuse labs</a>
@@ -55,10 +55,10 @@
           to read, effective, and mistake-free. Try now....
         </p>
         <a href="post.html?id=1" class="text-purple-900 hover:underline">Read More...</a>
-      </article>
+      </article> -->
 
       <!-- Post 2 -->
-      <article class="bg-white rounded shadow flex flex-col  p-6">
+      <!-- <article class="bg-white rounded shadow flex flex-col  p-6">
         <a href="#" class="lg:text-2xl text-sm font-semibold mb-4 hover:underline">StarkNet is a permissionless Layer 2
           network for deploying scalable Ethereum dApps.</a>
 
@@ -71,10 +71,10 @@
           StarkEx is a tailored L2 scaling engine for specific applications like dYdX or Immutable X.
         </p>
         <a href="post.html?id=2" class="text-purple-900 hover:underline">Read More...</a>
-      </article>
+      </article> -->
 
       <!-- Post 3 -->
-      <article class="bg-white rounded shadow flex flex-col p-6">
+      <!-- <article class="bg-white rounded shadow flex flex-col p-6">
         <a href="#" class="lg:text-2xl text-sm font-semibold mb-4 hover:underline">StarkEx is a customized zk-rollup
           solution built for specific high-performance apps.</a>
 
@@ -87,10 +87,10 @@
           Solidity is Ethereum's smart contract language, not optimized for zk-rollups.
         </p>
         <a href="post.html?id=3" class="text-purple-900 hover:underline">Read More...</a>
-      </article>
+      </article> -->
 
       <!-- Post 4 -->
-      <article class="bg-white rounded shadow p-6 flex flex-col">
+      <!-- <article class="bg-white rounded shadow p-6 flex flex-col">
         <a href="#" class="lg:text-2xl text-sm font-semibold mb-2 hover:underline">Cairo is a low-level language
           designed for writing StarkNet smart contracts.</a>
 
@@ -104,10 +104,10 @@
 
         </p>
         <a href="post.html?id=4" class="text-purple-900 hover:underline">Read More...</a>
-      </article>
+      </article> -->
 
-      <!-- Post-->
-      <article class="bg-white rounded shadow p-6 flex flex-col">
+      <!-- Post 5-->
+      <!-- <article class="bg-white rounded shadow p-6 flex flex-col">
         <a href="#" class="lg:text-2xl text-sm font-semibold mb-2 hover:underline">Cairo is a low-level language
           designed for writing StarkNet smart contracts.</a>
 
@@ -121,7 +121,7 @@
 
         </p>
         <a href="post.html?id=4" class="text-purple-900 hover:underline">Read More...</a>
-      </article>
+      </article> -->
     </section>
 
     <!-- Sidebar for Adverts and banners and Blog summaries  -->
@@ -266,9 +266,25 @@
       <span class="hover:text-white cursor-pointer">Terms of Service</span>
     </div>
   </footer>
-
   <script>
 
+    fetch("https://test.blockfuselabs.com/api/posts?_limit=1").then((result) => result.json()).then((json) => {
+        console.log(json);
+        // Object.keys(json)
+           json.data.forEach(element => {
+              let mainDiv = document.createElement("div");
+        mainDiv.innerHTML = `<article class="bg-white rounded shadow p-6 flex flex-col">
+        <a href="#" class="lg:text-2xl text-sm font-semibold mb-2 hover:underline">${element.title}</a>
+
+        <div><img src="${element.featured_image_url_full}" alt="Image for the post" class="w-full h-64 object-cover rounded mb-4" /></div>
+        <p class="text-sm text-gray-500 mb-2">${element.created_at}</p>
+        <p class="text-gray-700 mb-4">${element.content}</p>
+        <a href="post.html?id=4" class="text-purple-900 hover:underline">Read More...</a>
+      </article>`;
+        document.getElementById("mainContentContainer").appendChild(mainDiv); 
+            }); 
+
+      })
   </script>
 </body>
 
