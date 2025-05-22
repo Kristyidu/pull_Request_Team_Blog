@@ -76,9 +76,9 @@
     let token = localStorage.getItem("userToken");
 
     // if (!token) {
-    //   alert("Login in to have access")
-    //   window.location.href = "login.html"
-    //   return
+    //   alert("Login to have access");
+    //   window.location.href = "login.html";
+    //   return;
     // }
 
     async function loadCategories() {
@@ -133,11 +133,12 @@
         return;
       }
 
-      // if (!token) {
-      //   alert("Login in to have access")
-      //   window.location.href = "login.html"
-      //   return
-      // }
+      let token = localStorage.getItem("userToken");
+      if (!token) {
+        alert("Login in to have access")
+        window.location.href = "login.html"
+        return
+      }
 
       try {
         const res = await fetch('https://test.blockfuselabs.com/api/posts',
